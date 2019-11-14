@@ -1,6 +1,8 @@
 # iOS Translation App 
 ### Built using Xamarin.Forms
 
+![alt text](https://github.com/milescward/iOS-Translator-application/blob/master/Eng%20to%20Chinese%20Screenshot.png)
+
 ## Goals by Layer:
 
 ### User Interface
