@@ -19,7 +19,7 @@ namespace Translator
     {
         private const string key_var = "";
         private static readonly string subscriptionKey = Environment.GetEnvironmentVariable(key_var);
-        private const string endpoint_var = "https://translationtest.cognitiveservices.azure.com/sts/v1.0/issuetoken";
+        private const string endpoint_var = "";
         private static readonly string endpoint = Environment.GetEnvironmentVariable(endpoint_var);
         private const string speech_key = "";
         private const string route = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh";
