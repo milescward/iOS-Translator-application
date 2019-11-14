@@ -5,38 +5,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" x:Class="Translator.MainPage">
     <ContentPage.ToolbarItems>
-       <ToolbarItem FlexLayout.AlignSelf="Center" Text="Save" Clicked="Save_ClickedAsync"/>
+       <ToolbarItem FlexLayout.AlignSelf="Center"
+                    Text="Save"
+                    Clicked="Save_ClickedAsync"/>
     </ContentPage.ToolbarItems>
     <StackLayout Spacing="20" Padding="20" BackgroundColor="DarkBlue" >
         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Picker x:Name="SourceLanguage"
-                        SelectedItem="{Binding Translation.SourceLanguage}"
-                        Title="Source Language">
-                <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>English</x:String>
-                            <x:String>Italian</x:String>
-                            <x:String>French</x:String>
-                            <x:String>Spanish</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                <Picker ItemsSource="{Binding Languages}"
+                        x:Name="SourceLanguage"
+                        Title="Source Language"
+                        />
             </StackLayout>
             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Picker x:Name="TargetLanguage"
-                        
-                        SelectedItem="{Binding Translation.TargetLanguage}"
-                        Title="Target Language">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>English</x:String>
-                            <x:String>Italian</x:String>
-                            <x:String>French</x:String>
-                            <x:String>Spanish</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                <Picker ItemsSource="{Binding Languages}"
+                        x:Name="TargetLanguage"
+                        Title="Target Language"/>
             </StackLayout>
         </StackLayout>
         <Editor VerticalOptions="FillAndExpand"

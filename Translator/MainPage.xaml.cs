@@ -11,6 +11,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net;
 using System.Xml.Linq;
+using Translator.Data;
 
 namespace Translator
 {
@@ -22,24 +23,32 @@ namespace Translator
         private const string endpoint_var = "";
         private static readonly string endpoint = Environment.GetEnvironmentVariable(endpoint_var);
         private const string speech_key = "";
-        private const string route = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh";
+        protected string route = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh";
+        public IList<String> Languages { get; set; }
+        public IList<String> LangCodes { get; set; }
+        public IDictionary<string, string> LangDict { get; set; }
 
 
         public MainPage()
         {
             InitializeComponent();
+            InitializeData();
 
             SourceLanguage.BindingContext = this;
             TargetLanguage.BindingContext = this;
         }
 
+        async void InitializeData()
+        {
+            var dataStore = new MockDataSource();
+            LangDict = await dataStore.GetLangDictAsync();
+            Languages = await dataStore.GetLanguagesAsync();
+            LangCodes = await dataStore.GetLangCodesAsync();
+        }
+
         private void Save_ClickedAsync(object sender, EventArgs eventArgs)
         {
-            DisplayAlert("Information", "Some more", "Test", "Test");
-            //var translation = (Translation)BindingContext;
-            //translation.Date = DateTime.UtcNow;
-            //await App.Database.SaveItemAsync(translation);
-            //await Navigation.PopAsync();
+            DisplayAlert("", "", "", "");
         }
 
         private async void OnRecordButtonClicked(object sender, EventArgs e)
@@ -114,6 +123,7 @@ namespace Translator
             try
             {
                 var config = SpeechConfig.FromSubscription(speech_key, "westus");
+                //config.SpeechRecognitionLanguage = TargetLanguage;
 
                 using (var synthesizer = new SpeechSynthesizer(config))
                 {
@@ -143,12 +153,6 @@ namespace Translator
             }
         }
 
-        //private async void OnTranslateButtonClicked(object sender, EventArgs e)
-        //{
-        //    string result = await TranslateTextRequest(subscriptionKey, route, RecognitionText.Text);
-        //    UpdateUI(result);
-        //}
-
         private async void OnTranslateButtonClicked(object sender, EventArgs e)
         {
             string inputText = RecognitionText.Text;
@@ -173,10 +177,6 @@ namespace Translator
                     string result = await response.Content.ReadAsStringAsync();
                     StringBuilder sb = new StringBuilder();
                     TranslationResult[] deserializedOutput = JsonConvert.DeserializeObject<TranslationResult[]>(result);
-                    // Iterate over the deserialized results.
-                    // Print the detected input language and confidence score.
-                    //sb.Append("Detected input language: {0}\nConfidence score: {1}\n", o.DetectedLanguage.Language, o.DetectedLanguage.Score);
-                    // Iterate over the results and print each translation.
                     foreach (TranslationResult o in deserializedOutput)
                     {
                         foreach (Translation t in o.Translations)
