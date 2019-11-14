@@ -9,7 +9,7 @@
 - [X] Picker with specific languages
 - [X] Input and Output text boxes
 - [X] Buttons for recording, reading and translating
-- [ ] Connect picker elements to collection and translation/reading buttons
+- [X] Connect picker elements to collection and translation/reading buttons
 - [ ] Configure Speech Synthesizer for multiple languages
 - [ ] Configure Speech Recognition for multiple languages
 - [ ] Improve layout aesthetics
