@@ -12,15 +12,14 @@
     <StackLayout Spacing="20" Padding="20" BackgroundColor="DarkBlue" >
         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Picker ItemsSource="{Binding Languages}"
-                        x:Name="SourceLanguage"
+                <Picker x:Name="SourceLanguage"
                         Title="Source Language"
-                        />
+                        SelectedIndexChanged="OnSourceLanguageChosen"/>
             </StackLayout>
             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Picker ItemsSource="{Binding Languages}"
-                        x:Name="TargetLanguage"
-                        Title="Target Language"/>
+                <Picker x:Name="TargetLanguage"
+                        Title="Target Language"
+                        SelectedIndexChanged="OnTargetLanguageChosen"/>
             </StackLayout>
         </StackLayout>
         <Editor VerticalOptions="FillAndExpand"
@@ -66,6 +65,7 @@
         <Editor VerticalOptions="FillAndExpand"
                 Placeholder="Output"
                 x:Name="TranslatedText"
-                AutoSize="TextChanges"/>
+                AutoSize="TextChanges"
+                BackgroundColor="White"/>
     </StackLayout>
 </ContentPage>

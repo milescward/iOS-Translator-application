@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,47 +8,34 @@ namespace Translator.Data
 {
     public class MockDataSource : IDataStore
     {
-        public static readonly IDictionary<string, string> LanguageD;
-        public static readonly IList<string> Languages;
-        public static readonly IList<string> LangCodes;
+        public ObservableCollection<Language> Languages;
 
-        static MockDataSource()
+        public MockDataSource()
         {
-            LanguageD = new Dictionary<string, string>
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            Languages = new ObservableCollection<Language>
             {
-                { "English US", "en-US"},
-                { "English UK", "en-UK"},
-                { "Italian", "it" },
-                { "Chinese Simplified", "zh-Hans"},
-                { "Chinese Traditional", "zh-Hant"},
-                { "Spanish", "es"},
-                { "Russian", "ru"},
-                { "Norwegian", "nb"},
-                { "Korean", "ko"},
-                { "Hungarian", "hu"},
-                { "Dutch", "nl"},
+                new Language { Name = "English US", Code="en-US"},
+                new Language { Name ="English UK", Code="en-UK"},
+                new Language { Name ="Italian", Code="it" },
+                new Language { Name ="Chinese Simplified", Code="zh-Hans"},
+                new Language { Name ="Chinese Traditional", Code="zh-Hant"},
+                new Language { Name ="Spanish", Code="es"},
+                new Language { Name ="Russian", Code="ru"},
+                new Language { Name ="Norwegian", Code="nb"},
+                new Language { Name ="Korean", Code="ko"},
+                new Language { Name ="Hungarian", Code="hu"},
+                new Language { Name ="Dutch", Code="nl"},
             };
-
-            Languages = LanguageD.Keys.ToList();
-            LangCodes = LanguageD.Values.ToList();
         }
 
-
-        public async Task<IDictionary<string, string>> GetLangDictAsync()
-        {
-            return await Task.FromResult(LanguageD);
-        }
-
-        public async Task<IList<string>> GetLanguagesAsync()
+        public async Task<ObservableCollection<Language>> GetLanguagesAsync()
         {
             return await Task.FromResult(Languages);
         }
-
-        public async Task<IList<string>> GetLangCodesAsync()
-        {
-            return await Task.FromResult(LangCodes);
-        }
-
-
     }
 }

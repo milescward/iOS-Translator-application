@@ -18,6 +18,7 @@
     <Folder Include="Models\" />
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS">
@@ -26,8 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Services\ITranslateService.cs" />
-    <Compile Remove="Services\AuthenticationService.cs" />
-    <Compile Remove="Services\TextTranslationService.cs" />
     <Compile Remove="Data\TranslationDb.cs" />
+    <Compile Remove="Services\AuthenticationService.cs" />
   </ItemGroup>
 </Project>

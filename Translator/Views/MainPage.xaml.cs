@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CognitiveServices.Speech;
 using Translator.Services;
 using Xamarin.Forms;
 using System.Net.Http;
 using Newtonsoft.Json;
-using System.Net;
-using System.Xml.Linq;
 using Translator.Data;
+using System.Collections.ObjectModel;
+using Translator.ViewModels;
+using System.Linq;
 
 namespace Translator
 {
@@ -23,27 +22,41 @@ namespace Translator
         private const string endpoint_var = "";
         private static readonly string endpoint = Environment.GetEnvironmentVariable(endpoint_var);
         private const string speech_key = "";
-        protected string route = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=zh";
-        public IList<String> Languages { get; set; }
-        public IList<String> LangCodes { get; set; }
-        public IDictionary<string, string> LangDict { get; set; }
+        protected string route = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0";
+
+        MainPageViewModel viewModel = new MainPageViewModel();
 
 
         public MainPage()
         {
             InitializeComponent();
-            InitializeData();
-
-            SourceLanguage.BindingContext = this;
-            TargetLanguage.BindingContext = this;
+            
+            this.BindingContext = viewModel;
+            LoadData();
         }
 
-        async void InitializeData()
+        private void LoadData()
         {
-            var dataStore = new MockDataSource();
-            LangDict = await dataStore.GetLangDictAsync();
-            Languages = await dataStore.GetLanguagesAsync();
-            LangCodes = await dataStore.GetLangCodesAsync();
+            TargetLanguage.ItemsSource = viewModel.LangCodeDictionary.Keys.ToList();
+            SourceLanguage.ItemsSource = viewModel.LangCodeDictionary.Keys.ToList();
+        }
+
+        private void OnTargetLanguageChosen(object sender, EventArgs eventArgs)
+        {
+            var selectedIndex = ((Picker)sender).SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                TargetLanguage.SelectedItem = (string)TargetLanguage.ItemsSource[selectedIndex];
+            }
+        }
+
+        private void OnSourceLanguageChosen(object sender, EventArgs eventArgs)
+        {
+            var selectedIndex = ((Picker)sender).SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                SourceLanguage.SelectedItem = (string)SourceLanguage.ItemsSource[selectedIndex];
+            }
         }
 
         private void Save_ClickedAsync(object sender, EventArgs eventArgs)
@@ -90,15 +103,7 @@ namespace Translator
             catch (Exception ex)
             {
                 UpdateUI("Exception: " + ex);
-            }
-        }
-
-        private async void OnEnableMicrophoneButtonClicked(object sender, EventArgs e)
-        {
-            bool micAccessGranted = await DependencyService.Get<IMicrophoneService>().GetPermissionsAsync();
-            if (!micAccessGranted)
-            {
-                UpdateUI("Please give access to microphone");
+            
             }
         }
 
@@ -123,28 +128,27 @@ namespace Translator
             try
             {
                 var config = SpeechConfig.FromSubscription(speech_key, "westus");
-                //config.SpeechRecognitionLanguage = TargetLanguage;
 
                 using (var synthesizer = new SpeechSynthesizer(config))
                 {
                     StringBuilder sb = new StringBuilder();
                     using (var result = await synthesizer.SpeakTextAsync(TranslatedText.Text))
-                        if (result.Reason == ResultReason.SynthesizingAudioCompleted)
-                        {
-                            sb.Append($"Speech synthesized to speaker for text [{RecognitionText.Text}]");
-                        }
-                        else if (result.Reason == ResultReason.Canceled)
-                        {
-                            var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
-                            sb.Append($"CANCELED: Reason={cancellation.Reason}");
+                    if (result.Reason == ResultReason.SynthesizingAudioCompleted)
+                    {
+                        sb.Append($"Speech synthesized to speaker for text [{RecognitionText.Text}]");
+                    }
+                    else if (result.Reason == ResultReason.Canceled)
+                    {
+                        var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
+                        sb.Append($"CANCELED: Reason={cancellation.Reason}");
 
-                            if (cancellation.Reason == CancellationReason.Error)
-                            {
-                                sb.Append($"CANCELED: ErrorCode={cancellation.ErrorCode}");
-                                sb.Append($"CANCELED: ErrorDetails=[{cancellation.ErrorDetails}]");
-                                sb.Append($"CANCELED: Did you update the subscription info?");
-                            }
+                        if (cancellation.Reason == CancellationReason.Error)
+                        {
+                            sb.Append($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                            sb.Append($"CANCELED: ErrorDetails=[{cancellation.ErrorDetails}]");
+                            sb.Append($"CANCELED: Did you update the subscription info?");
                         }
+                    }
                 }
             }
             catch (Exception ex)
@@ -155,6 +159,8 @@ namespace Translator
 
         private async void OnTranslateButtonClicked(object sender, EventArgs e)
         {
+            string targetCode = "&to=" + viewModel.LangCodeDictionary[(string)TargetLanguage.SelectedItem];
+            string sourceCode = "&from=" + viewModel.LangCodeDictionary[(string)SourceLanguage.SelectedItem];
             string inputText = RecognitionText.Text;
             try
             {
@@ -168,7 +174,7 @@ namespace Translator
                     // Set the method to Post.
                     request.Method = HttpMethod.Post;
                     // Construct the URI and add headers.
-                    request.RequestUri = new Uri(endpoint + route);
+                    request.RequestUri = new Uri(endpoint + route + sourceCode + targetCode);
                     request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
                     request.Headers.Add("Ocp-Apim-Subscription-Key", key_var);
 
