@@ -145,4 +145,8 @@
   <ItemGroup>
     <Folder Include="Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Flags3.png" />
+    <BundleResource Include="Resources\Rec_Icon.png" />
+  </ItemGroup>
 </Project>

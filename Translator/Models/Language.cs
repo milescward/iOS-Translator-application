@@ -8,6 +8,7 @@ namespace Translator
     {
         private string _name;
         private string _code;
+        private string _synthCode;
 
         public string Name
         {
@@ -25,6 +26,15 @@ namespace Translator
             {
                 _code = value;
                 RaisePropertyChanged(nameof(Code));
+            }
+        }
+        public string SynthCode
+        {
+            get => _synthCode;
+            set
+            {
+                _synthCode = value;
+                RaisePropertyChanged(nameof(_synthCode));
             }
         }
 

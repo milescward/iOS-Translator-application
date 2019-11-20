@@ -3,69 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             BackgroundImageSource="Flags3.png"
              mc:Ignorable="d" x:Class="Translator.MainPage">
     <ContentPage.ToolbarItems>
        <ToolbarItem FlexLayout.AlignSelf="Center"
                     Text="Save"
                     Clicked="Save_ClickedAsync"/>
     </ContentPage.ToolbarItems>
-    <StackLayout Spacing="20" Padding="20" BackgroundColor="DarkBlue" >
-        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Picker x:Name="SourceLanguage"
-                        Title="Source Language"
-                        SelectedIndexChanged="OnSourceLanguageChosen"/>
-            </StackLayout>
-            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Picker x:Name="TargetLanguage"
-                        Title="Target Language"
-                        SelectedIndexChanged="OnTargetLanguageChosen"/>
-            </StackLayout>
-        </StackLayout>
-        <Editor VerticalOptions="FillAndExpand"
-                Placeholder="Text to translate"
-                x:Name="RecognitionText"
-                AutoSize="TextChanges"
-                HorizontalOptions="FillAndExpand"
-                BackgroundColor="White"/>
-        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-            <StackLayout Orientation="Vertical"
+    <ScrollView>
+        <StackLayout Spacing="20" Padding="20">
+            <StackLayout Orientation="Horizontal"
                          HorizontalOptions="FillAndExpand">
-                <Button BorderWidth="1"
-                        BackgroundColor="AliceBlue"
-                        VerticalOptions="Center"
-                        HorizontalOptions="FillAndExpand"
-                        Text="Translate"
-                        FontSize="Medium"
-                        Clicked="OnTranslateButtonClicked"
-                        TextColor="Black"/>
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="FillAndExpand">
+                    <Picker x:Name="SourceLanguage"
+                            BackgroundColor="White"
+                            Opacity=".75"
+                            Title="Source Language"
+                            TextColor="Black"
+                            SelectedItem="{Binding x:reference SourceLanguage}"
+                            SelectedIndexChanged="OnSourceLanguageChosen"/>
+                </StackLayout>
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="FillAndExpand">
+                    <Picker x:Name="TargetLanguage"
+                            BackgroundColor="White"
+                            Opacity=".75"
+                            TextColor="Black"
+                            SelectedItem="{Binding x:reference TargetLanguage}"
+                            Title="Target Language"
+                            SelectedIndexChanged="OnTargetLanguageChosen"/>
+                </StackLayout>
             </StackLayout>
-            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                <Button BorderWidth="1"
-                        BackgroundColor="AliceBlue"
-                        VerticalOptions="Center"
-                        HorizontalOptions="FillAndExpand"
-                        Text="Record"
-                        TextColor="Red"
-                        FontSize="Medium"
-                        Clicked="OnRecordButtonClicked"/> 
-            </StackLayout>
-            <StackLayout Orientation="Vertical"
+            <Editor VerticalOptions="FillAndExpand"
+                    Placeholder="Text to translate"
+                    x:Name="RecognitionText"
+                    AutoSize="TextChanges"
+                    FontSize="Large"
+                    Opacity=".6"
+                    HorizontalOptions="FillAndExpand"
+                    BackgroundColor="White"/>
+            <StackLayout Orientation="Horizontal"
                          HorizontalOptions="FillAndExpand">
-                <Button BorderWidth="1"
-                        BackgroundColor="AliceBlue"
-                        VerticalOptions="Center"
-                        HorizontalOptions="FillAndExpand"
-                        Text="Read"
-                        FontSize="Medium"
-                        TextColor="Black"
-                        Clicked="OnReadButtonClicked"/> 
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="FillAndExpand">
+                    <Button BorderWidth="2"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center"
+                            HorizontalOptions="FillAndExpand"
+                            Text="Translate"
+                            FontSize="Large"
+                            Clicked="OnTranslateButtonClicked"
+                            TextColor="Black"/>
+                </StackLayout>
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="FillAndExpand">
+                    <ImageButton Source="Rec_Icon.png"
+                            VerticalOptions="Center"
+                            HorizontalOptions="FillAndExpand"
+                            Opacity=".75"
+                            Clicked="OnRecordButtonClicked"/> 
+                </StackLayout>
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="FillAndExpand">
+                    <Button BorderWidth="2"
+                            VerticalOptions="Center"
+                            HorizontalOptions="FillAndExpand"
+                            Text="Read"
+                            FontAttributes="Bold"
+                            FontSize="Large"
+                            TextColor="Black"
+                            Clicked="OnReadButtonClicked"/> 
+                </StackLayout>
             </StackLayout>
+            <Editor VerticalOptions="FillAndExpand"
+                    Placeholder="Output"
+                    x:Name="TranslatedText"
+                    FontSize="Large"
+                    Opacity=".6"
+                    TextColor="Black"
+                    AutoSize="TextChanges"
+                    BackgroundColor="White"/>
         </StackLayout>
-        <Editor VerticalOptions="FillAndExpand"
-                Placeholder="Output"
-                x:Name="TranslatedText"
-                AutoSize="TextChanges"
-                BackgroundColor="White"/>
-    </StackLayout>
+    </ScrollView>
 </ContentPage>

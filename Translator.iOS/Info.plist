@@ -42,5 +42,7 @@
 	<string>TransApp</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Custom Property1</key>
+	<string></string>
 </dict>
 </plist>

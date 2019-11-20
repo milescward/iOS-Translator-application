@@ -9,21 +9,6 @@ namespace Translator
 {
     public partial class App : Application
     {
-        //static TranslationDb database;
-
-        //public static TranslationDb Database
-        //{
-        //    get
-        //    {
-        //        if (database == null)
-        //        {
-        //            database = new TranslationDb(
-        //              Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TranslationSQLite.db3"));
-        //        }
-        //        return database;
-        //    }
-        //}
-
         public App()
         {
             InitializeComponent();

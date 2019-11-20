@@ -19,6 +19,7 @@
     <Folder Include="Services\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Views\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS">
@@ -29,5 +30,10 @@
     <Compile Remove="Services\ITranslateService.cs" />
     <Compile Remove="Data\TranslationDb.cs" />
     <Compile Remove="Services\AuthenticationService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\63.jpg" />
+    <None Remove="Resources\Flags.png" />
+    <None Remove="Resources\Flags2.png" />
   </ItemGroup>
 </Project>

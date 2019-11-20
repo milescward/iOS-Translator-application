@@ -5,12 +5,14 @@ using System.Text;
 using Microsoft.CognitiveServices.Speech;
 using Translator.Services;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Translator.Data;
 using System.Collections.ObjectModel;
 using Translator.ViewModels;
 using System.Linq;
+using MediaPlayer;
 
 namespace Translator
 {
@@ -66,10 +68,13 @@ namespace Translator
 
         private async void OnRecordButtonClicked(object sender, EventArgs e)
         {
+            
             try
             {
                 var config = SpeechConfig.FromSubscription(speech_key, "westus");
-
+                config.SpeechRecognitionLanguage = config.SpeechSynthesisLanguage =
+                    viewModel.LangCodeDictionary[(string)SourceLanguage.SelectedItem];
+                
                 using (var recognizer = new SpeechRecognizer(config))
                 {
                     var result = await recognizer.RecognizeOnceAsync().ConfigureAwait(false);
@@ -100,10 +105,13 @@ namespace Translator
                     UpdateUI(sb.ToString());
                 }
             }
+            catch (ArgumentException Ae)
+            {
+                UpdateUI("Please choose a source language");
+            }
             catch (Exception ex)
             {
                 UpdateUI("Exception: " + ex);
-            
             }
         }
 
@@ -128,27 +136,30 @@ namespace Translator
             try
             {
                 var config = SpeechConfig.FromSubscription(speech_key, "westus");
+                config.SpeechSynthesisLanguage =
+                    viewModel.LangCodeDictionary
+                    [(string)TargetLanguage.SelectedItem];
 
                 using (var synthesizer = new SpeechSynthesizer(config))
                 {
                     StringBuilder sb = new StringBuilder();
                     using (var result = await synthesizer.SpeakTextAsync(TranslatedText.Text))
-                    if (result.Reason == ResultReason.SynthesizingAudioCompleted)
-                    {
-                        sb.Append($"Speech synthesized to speaker for text [{RecognitionText.Text}]");
-                    }
-                    else if (result.Reason == ResultReason.Canceled)
-                    {
-                        var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
-                        sb.Append($"CANCELED: Reason={cancellation.Reason}");
-
-                        if (cancellation.Reason == CancellationReason.Error)
+                        if (result.Reason == ResultReason.SynthesizingAudioCompleted)
                         {
-                            sb.Append($"CANCELED: ErrorCode={cancellation.ErrorCode}");
-                            sb.Append($"CANCELED: ErrorDetails=[{cancellation.ErrorDetails}]");
-                            sb.Append($"CANCELED: Did you update the subscription info?");
+                            sb.Append($"Speech synthesized to speaker for text [{RecognitionText.Text}]");
                         }
-                    }
+                        else if (result.Reason == ResultReason.Canceled)
+                        {
+                            var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
+                            sb.Append($"CANCELED: Reason={cancellation.Reason}");
+
+                            if (cancellation.Reason == CancellationReason.Error)
+                            {
+                                sb.Append($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                                sb.Append($"CANCELED: ErrorDetails=[{cancellation.ErrorDetails}]");
+                                sb.Append($"CANCELED: Did you update the subscription info?");
+                            }
+                        }
                 }
             }
             catch (Exception ex)
@@ -157,10 +168,14 @@ namespace Translator
             }
         }
 
+
+
+
+
         private async void OnTranslateButtonClicked(object sender, EventArgs e)
         {
             string targetCode = "&to=" + viewModel.LangCodeDictionary[(string)TargetLanguage.SelectedItem];
-            string sourceCode = "&from=" + viewModel.LangCodeDictionary[(string)SourceLanguage.SelectedItem];
+            //string sourceCode = "&from=" + viewModel.LangCodeDictionary[(string)SourceLanguage.SelectedItem];
             string inputText = RecognitionText.Text;
             try
             {
@@ -174,7 +189,7 @@ namespace Translator
                     // Set the method to Post.
                     request.Method = HttpMethod.Post;
                     // Construct the URI and add headers.
-                    request.RequestUri = new Uri(endpoint + route + sourceCode + targetCode);
+                    request.RequestUri = new Uri(endpoint + route + targetCode);
                     request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
                     request.Headers.Add("Ocp-Apim-Subscription-Key", key_var);
 
