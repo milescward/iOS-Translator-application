@@ -19,5 +19,5 @@
 
 ### BI
 - [ ] Migrate to proper MVVM
-- [ ] Improve exception handling
+- [X] Improve exception handling
 - [ ] Extract methods from MainPage to proper ViewModel
